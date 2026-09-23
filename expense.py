@@ -88,7 +88,26 @@ def view_summary():
     for category, total, count in rows:
         print(f"{category}: ₹{total:.2f} ({count} expense{'s' if count != 1 else ''})")
 
+def delete_expenses():
+    view_expenses()
+    with get_connection() as conn:
+        rows= conn.execute("SELECT id FROM expenses").fetchall()
 
+    if not rows:
+        return
+
+    try:
+        expense_id= int(input("Enter the ID to delete:"))
+    except ValueError:
+        print("That's not a valid ID.")
+        return
+
+    with get_connection() as conn:
+        cursor= conn.execute("DELETE FROM expenses WHERE id =?",(expense_id,))
+    if cursor.rowcount == 0:
+        print("no expenses with that ID.")
+    else:
+        print("Expense deleted.")
 
 def main():
     init_db()
@@ -97,7 +116,8 @@ def main():
         print("1. Add expense")
         print("2. View expenses")
         print("3. View summary by category")
-        print("4. Quit")
+        print("4. Delete an expense")
+        print("5. Quit")
         choice = input("Choose an option: ")
 
         if choice == "1":
@@ -107,6 +127,8 @@ def main():
         elif choice == "3":
             view_summary()
         elif choice == "4":
+            delete_expenses()
+        elif choice == "5":
             print("Goodbye!")
             break
         else:
