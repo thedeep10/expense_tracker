@@ -71,6 +71,24 @@ def view_expenses():
     for id_, date_text, category, amount in rows:
         print(f"{id_}. {date_text} | {category} | ₹{amount:.2f}")
 
+def view_summary():
+    with get_connection() as conn:
+        rows = conn.execute("""
+            SELECT category, SUM(amount) as total, COUNT(*) as count
+            FROM expenses
+            GROUP BY category
+            ORDER BY total DESC
+        """).fetchall()
+
+    if not rows:
+        print("No expenses yet.")
+        return
+
+    print("\n--- Spending by Category ---")
+    for category, total, count in rows:
+        print(f"{category}: ₹{total:.2f} ({count} expense{'s' if count != 1 else ''})")
+
+
 
 def main():
     init_db()
@@ -78,7 +96,8 @@ def main():
         print("\n--- Expense Tracker ---")
         print("1. Add expense")
         print("2. View expenses")
-        print("3. Quit")
+        print("3. View summary by category")
+        print("4. Quit")
         choice = input("Choose an option: ")
 
         if choice == "1":
@@ -86,10 +105,13 @@ def main():
         elif choice == "2":
             view_expenses()
         elif choice == "3":
+            view_summary()
+        elif choice == "4":
             print("Goodbye!")
             break
         else:
             print("Invalid choice, try again.")
+
 
 
 if __name__ == "__main__":
