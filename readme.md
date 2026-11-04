@@ -34,5 +34,4 @@ Expense added!
 
 
 ## What I learned
-Building this project helped me practice SQL (CREATE TABLE, INSERT, SELECT, DELETE, GROUP BY),
-input validation with try/except, and using Git for version control.
+This is my first project so i built the basic stuff and building this project helped me practice SQL (CREATE TABLE, INSERT, SELECT, DELETE, GROUP BY), input validation with try/except, and using Git for version control.
